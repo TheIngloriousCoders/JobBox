@@ -6,3 +6,4 @@ djangorestframework
 django-cors-headers
 pytest==7.0.1
 pytest-django==4.5.2
+mysqlclient==2.1.0

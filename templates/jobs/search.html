@@ -6,105 +6,97 @@
 
 {% block content %}
 
-    <section class="job-form-section job-form-section--compressed">
-        <div class="container">
-            <h4 class="heading">Find a <span class="accent">job </span> you will <span class="accent">love</span></h4>
-            <form id="job-main-form" method="get" action="#" class="job-main-form">
-                <div class="controls">
-                    <div class="row align-items-end">
-                        <div class="col-sm-1 col-lg-2"></div>
-                        <div class="col-sm-5 col-lg-4 form-group">
-                            <label for="profession">Position</label>
-                            <input type="text" id="position" name="position"
-                                   placeholder="Position you are looking for" class="form-control">
-                        </div>
-                        <div class="col-sm-5 col-lg-4 form-group">
-                            <label for="location">Location</label>
-                            <input type="text" id="location" name="location" placeholder="Any particular location?"
-                                   value="" class="form-control">
-                        </div>
-                        <div class="col-sm-1 col-lg-2 form-group">
-                            <button type="submit" name="name"
-                                    class="btn btn-outline-white-primary job-main-form__button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-    <section>
-        <div class="container">
-            <h3 class="heading">We have found <span class="accent">{{ jobs.count }}</span> jobs</h3>
-            {% for job in jobs %}
-                <div class="job-listing  ">
-                    <div class="row">
-                        <div class="col-md-12 col-lg-6">
-                            <div class="row">
-                                <div class="col-2">
-                                    <img src="{% static 'img/company-1.png' %}"
-                                         alt="Ipsioou " class="img-fluid">
-                                </div>
-                                <div class="col-10">
-                                    <h4 class="job__title"><a
-                                            href="{% url 'jobs:jobs-detail' job.id %}">{{ job.title }}</a></h4>
-                                    <p class="job__company">
-                                        {{ job.company_name }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-10 col-md-3 col-lg-2 ml-auto"><i class="fa fa-map-marker job__location"></i>
-                            {{ job.location }}
-                        </div>
-                        <div class="col-10 col-md-3 col-lg-3 ml-auto">
-                            <p>Posted {{ job.created_at|timesince }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            {% if is_paginated %}
-                <div class="row">
-                    <div class="col-md-12">
-                        <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-4 mb-4">
-                            <ul class="pagination">
-                                {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a href="?page={{ page_obj.previous_page_number }}"
-                                           class="page-link">&laquo;</a>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item disabled">
-                                        <a class="page-link">&laquo;</a>
-                                    </li>
-                                {% endif %}
-                                {% for i in page_obj.paginator.page_range %}
-                                    {% if page_obj.number == i %}
-                                        <li class="page-item active">
-                                            <a class="page-link">{{ i }}</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item">
-                                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">&raquo;</a>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item disabled">
-                                        <a class="page-link">&raquo;</a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </section>
+<div class="bg-pink-100">
+	<div class="max-w-full mx-auto flex justify-center items-center">
+		<div class="overflow-hidden">
+			<form action="{% url 'jobs:searh' %}" method="get" class="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+				<h2 class="text-3xl text-center font-extrabold text-slate-700 sm:text-4xl">
+					<span class="block">Find A <span class="text-pink-600">Job</span>
+					<span>That You Will <span class="text-pink-600">Love</span>
+				</h2>
+				<div class="my-4 space-y-2">
+					<input class="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border-gray-300 rounded-md px-4 py-2"
+						placeholder="What kind of job are you looking for?"
+						id="profession" 
+						name="position"
+						value="{{ request.GET.position }}"
+					>
+					<input class="shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm border-gray-300 rounded-md px-4 py-2"
+						placeholder="Any particular location?"
+						id="location" 
+						name="location"
+						value="{{ request.GET.location }}"
+					>
+				</div>
+				<button type="submit" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-pink-500">
+					<span>Find a Job</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+    
+<section>
+	<h2 class="text-3xl text-center font-extrabold text-slate-700 sm:text-4xl">
+		<span class="block">We Found <span class="text-pink-600">{{ jobs.count }}</span> Jobs
+	</h2>
+	
+	<div class="bg-white shadow overflow-hidden sm:rounded-md max-w-5xl mx-auto mt-6">
+		<ul role="list" class="divide-y divide-gray-200">
+			{% for job in jobs %}
+			<li>
+				<a href="{% url 'jobs:jobs-detail' job.id %}" class="block hover:bg-gray-50">
+					<div class="px-4 py-4 sm:px-6">
+						<div class="flex items-center justify-between">
+							<p class="text-sm font-medium text-pink-600 truncate">{{ job.title }}</p>
+							<div class="ml-2 flex-shrink-0 flex">
+								<p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Full-time</p>
+							</div>
+						</div>
+						<div class="mt-2 sm:flex sm:justify-between">
+							<div class="sm:flex">
+								<p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+									<!-- Heroicon name: solid/location-marker -->
+									<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+										<path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+									</svg>
+									{{ job.location }}
+								</p>
+								<p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+									<!-- Heroicon name: solid/location-marker -->
+									<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+										<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd" />
+									</svg>
+									{{ job.company_name }}
+								</p>
+								{% if job.salary > 0 %}
+								<p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+									<!-- Heroicon name: solid/location-marker -->
+									<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+										<path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+									</svg>
+									${{ job.salary }}
+								</p>
+								{% endif %}
+							</div>
+							<div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+								<!-- Heroicon name: solid/calendar -->
+								<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+									<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+								</svg>
+								<p>
+									Posted
+									<time datetime="2020-01-07">{{ job.created_at|date:"M d, Y" }}</time>
+								</p>
+							</div>
+						</div>
+					</div>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</section>
 
 {% endblock %}
