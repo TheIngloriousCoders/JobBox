@@ -6,85 +6,67 @@
 
 {% block content %}
 
-    <section class="bg-light-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h1 class="heading">All applicants who applied for your positions</h1>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="container">
-            <div class="row">
-                {% for applicant in applicants %}
-                    <div class="col-lg-6">
-                        <div class="box applicant">
-                            <h4>{{ applicant.user.get_full_name }}</h4>
-                            <p><strong>Applied position: {{ applicant.job.title }}</strong></p>
-                            <a href="#" data-toggle="modal" data-target="#contact-modal"
-                               class="btn btn-outline-white-secondary btn-sm">
-                                <i class="fa fa-envelope"></i>Contact
-                            </a>
-                            <p>
-                                <span class="badge badge-info">Applied {{ applicant.created_at.astimezone }}</span>
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <p class="intro"></p>
-                                <div class="image">
-                                    <img src="{% static 'img/avatar.png' %}" alt=""
-                                         class="img-fluid rounded-circle">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                {% if is_paginated %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-4 mb-4">
-                                <ul class="pagination">
-                                    {% if page_obj.has_previous %}
-                                        <li class="page-item">
-                                            <a href="?page={{ page_obj.previous_page_number }}"
-                                               class="page-link">&laquo;</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <a class="page-link">&laquo;</a>
-                                        </li>
-                                    {% endif %}
-                                    {% for i in page_obj.paginator.page_range %}
-                                        {% if page_obj.number == i %}
-                                            <li class="page-item active">
-                                                <a class="page-link">{{ i }}</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item">
-                                                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                    {% if page_obj.has_next %}
-                                        <li class="page-item">
-                                            <a href="?page={{ page_obj.next_page_number }}"
-                                               class="page-link">&raquo;</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <a class="page-link">&raquo;</a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                {% else %}
-                    <h3>No Applicants</h3>
-                {% endif %}
-            </div>
-        </div>
-    </section>
+<div class="mt-12 mb-4">
+	<div class="max-w-full mx-auto flex justify-center items-center">
+		<h2 class="text-3xl text-center font-extrabold text-slate-700 sm:text-4xl">
+			<span class="block">All Your <span class="text-pink-600">Applications</span>
+		</h2>   
+	</div>
+</div>
+    
+<div class="bg-white shadow overflow-hidden sm:rounded-md max-w-5xl mx-auto">
+	<ul role="list" class="divide-y divide-gray-200">
+		{% for applicant in applicants %}
+      <li>
+        	<div class="block">
+          	<div class="flex items-center px-4 py-4 sm:px-6">
+					<div class="min-w-0 flex-1 flex items-center">
+						<div class="flex-shrink-0">
+							<img class="h-12 w-12 rounded-full" src="https://ui-avatars.com/api/?name={{ applicant.user.first_name }}+{{ applicant.user.last_name }}"
+								alt="{{ applicant.user.first_name  }} {{ applicant.user.last_name }}"
+							></div>
+              		<div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+							<div>
+								<p class="text-sm font-medium text-indigo-600 truncate">
+									{{ applicant.user.first_name }} {{ applicant.user.last_name }}
+								</p>
+								<p class="mt-2 flex items-center text-sm text-gray-500">
+								<!-- Heroicon name: solid/mail -->
+								<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+									<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+									<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+								</svg>
+								<span class="truncate">
+									{{ applicant.user.email }}
+								</span>
+								</p>
+							</div>
+                		<div class="hidden md:block">
+                  		<div>
+									<p class="text-sm text-gray-900">
+										Applied for
+										<a href="{% url 'jobs:jobs-detail' applicant.job.id %}" 
+											class="text-pink-600 hover:text-pink-700 font-medium"
+										>
+											{{ applicant.job.title }}
+										</a>
+									</p>
+									<p class="mt-2 flex items-center text-sm text-gray-500">
+										<!-- Heroicon name: solid/check-circle -->
+										<svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+										</svg>
+										Applied {{ applicant.created_at.astimezone }}
+									</p>
+                  		</div>
+                		</div>
+              		</div>
+            	</div>
+          	</div>
+			</div>
+      </li>
+		{% endfor %}
+	</ul>
+</div>
 
 {% endblock %}

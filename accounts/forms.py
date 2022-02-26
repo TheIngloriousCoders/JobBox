@@ -4,17 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 from accounts.models import User
 
-GENDER_CHOICES = (
-    ('male', 'Male'),
-    ('female', 'Female'))
-
-
 class EmployeeRegistrationForm(UserCreationForm):
     # gender = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=GENDER_CHOICES)
 
     def __init__(self, *args, **kwargs):
         super(EmployeeRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['gender'].required = True
         self.fields['first_name'].label = "First Name"
         self.fields['last_name'].label = "Last Name"
         self.fields['password1'].label = "Password"
@@ -50,7 +44,7 @@ class EmployeeRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2', 'gender']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
         error_messages = {
             'first_name': {
                 'required': 'First name is required',
@@ -60,16 +54,7 @@ class EmployeeRegistrationForm(UserCreationForm):
                 'required': 'Last name is required',
                 'max_length': 'Last Name is too long'
             },
-            'gender': {
-                'required': 'Gender is required'
-            }
         }
-
-    def clean_gender(self):
-        gender = self.cleaned_data.get('gender')
-        if not gender:
-            raise forms.ValidationError("Gender is required")
-        return gender
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
@@ -187,4 +172,4 @@ class EmployeeProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "gender"]
+        fields = ["first_name", "last_name"]
